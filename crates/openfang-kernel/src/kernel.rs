@@ -4065,7 +4065,18 @@ impl OpenFangKernel {
                 tool_names.join(", ")
             ));
         }
-        summary.push_str("MCP tools are prefixed with mcp_{server}_ and work like regular tools.");
+        summary.push_str("MCP tools are prefixed with mcp_{server}_ and work like regular tools.\n");
+        // Add filesystem-specific guidance when a filesystem MCP server is connected
+        let has_filesystem = servers.keys().any(|s| s.contains("filesystem"));
+        if has_filesystem {
+            summary.push_str(
+                "IMPORTANT: For accessing files OUTSIDE your workspace directory, you MUST use \
+                 the MCP filesystem tools (e.g. mcp_filesystem_read_file, mcp_filesystem_list_directory) \
+                 instead of the built-in file_read/file_list/file_write tools, which are restricted to \
+                 the workspace. The MCP filesystem server has been granted access to specific directories \
+                 by the user.",
+            );
+        }
         summary
     }
 
